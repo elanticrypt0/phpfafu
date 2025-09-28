@@ -36,15 +36,10 @@ Flight::route('POST /login', function () {
 });
 
 // Cerrar sesión
-
 Flight::route('/logout', function () {
     $authController = Flight::authController();
     $authController->logout();
-});
-
-Flight::route('POST /logout', function () {
-    $authController = Flight::authController();
-    $authController->logout();
+    Flight::redirect('/');
 });
 
 // Dashboard (ruta protegida)

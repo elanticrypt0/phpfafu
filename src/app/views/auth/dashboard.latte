@@ -71,16 +71,14 @@
                 <span id="refresh-loading" class="htmx-indicator">⏳</span>
             </button>
 
-            <button
-                hx-post="/logout"
-                hx-indicator="#logout-loading-dash"
+            <a
+                href="/logout"
                 class="btn"
                 style="background-color: var(--color-error);"
-                hx-confirm="¿Estás seguro de que quieres cerrar sesión?"
+                onclick="return confirm('¿Estás seguro de que quieres cerrar sesión?')"
             >
                 Cerrar Sesión
-                <span id="logout-loading-dash" class="htmx-indicator">⏳</span>
-            </button>
+            </a>
         </div>
 
         <div class="mt-md">

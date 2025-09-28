@@ -64,10 +64,7 @@ class AuthController extends BaseController
         // Finalmente, destruir la sesión
         session_destroy();
 
-        // Respuesta HTMX para redirección
-        Flight::response()->header('HX-Redirect', '/');
-        Flight::response()->status(200);
-        echo '<div class="success">✅ Sesión cerrada correctamente. Redirigiendo...</div>';
+        // La redirección se maneja en la ruta con Flight::redirect('/')
     }
 
     public function dashboard(): void

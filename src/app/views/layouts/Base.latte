@@ -18,13 +18,7 @@
                 {if $isAuthenticated}
                     <a href="/dashboard">📊 Dashboard</a>
                     <span class="text-muted">👋 Hola, {$currentUser}</span>
-                    <button
-                        hx-post="/logout"
-                        hx-indicator="#logout-loading"
-                        class="btn btn-secondary"
-                        style="padding: 0.25rem 0.75rem; font-size: 0.875rem;"
-                        hx-confirm="¿Cerrar sesión?"
-                    >
+                    <button id="btnLogout">
                         🚪 Salir
                         <span id="logout-loading" class="htmx-indicator">⏳</span>
                     </button>
@@ -56,6 +50,14 @@
             }, 500); // Pequeño delay para mostrar el mensaje
         }
     });
+
+    const btnLogout = document.querySelector("#btnLogout");
+    if(btnLogout){
+        btnLogout.addEventListener('click',(e)=>{
+            e.preventDefault();
+            window.location = "/logout";
+        });
+    }
     </script>
 </body>
 </html>
