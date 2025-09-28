@@ -1,0 +1,126 @@
+{extends '../layouts/Base.latte'}
+
+{block content}
+<div class="container">
+    <div class="flex items-center justify-center mb-xl">
+        <div class="card text-center" style="max-width: 600px;">
+            <h2>¡Bienvenido, {$user}! 👋</h2>
+            <p class="text-muted">Has iniciado sesión correctamente en el sistema.</p>
+        </div>
+    </div>
+
+    <div class="flex gap-lg" style="flex-wrap: wrap;">
+        <!-- Información de la sesión -->
+        <div class="card" style="flex: 1; min-width: 300px;">
+            <h3>📊 Información de la Sesión</h3>
+            <ul style="list-style: none; padding: 0;">
+                <li class="mb-sm">
+                    <strong>Usuario:</strong> {$user}
+                </li>
+                <li class="mb-sm">
+                    <strong>Estado:</strong>
+                    <span style="color: var(--color-success);">✅ Autenticado</span>
+                </li>
+                <li class="mb-sm">
+                    <strong>Hora de login:</strong>
+                    <span id="login-time"></span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Ejemplo de contenido protegido con HTMX -->
+        <div class="card" style="flex: 1; min-width: 300px;">
+            <h3>🔒 Contenido Protegido</h3>
+            <p>Este contenido solo es visible para usuarios autenticados.</p>
+
+            <button
+                hx-get="/api/protected-data"
+                hx-target="#protected-content"
+                hx-indicator="#data-loading"
+                class="btn btn-secondary mb-md"
+            >
+                Cargar Datos Protegidos
+                <span id="data-loading" class="htmx-indicator">⏳</span>
+            </button>
+
+            <div id="protected-content" class="mt-md"></div>
+        </div>
+    </div>
+
+    <!-- Acciones disponibles -->
+    <div class="card mt-xl">
+        <h3>🚀 Acciones Disponibles</h3>
+        <div class="flex gap-md" style="flex-wrap: wrap;">
+            <button
+                hx-get="/api/user-profile"
+                hx-target="#profile-data"
+                hx-indicator="#profile-loading"
+                class="btn btn-secondary"
+            >
+                Ver Perfil
+                <span id="profile-loading" class="htmx-indicator">⏳</span>
+            </button>
+
+            <button
+                hx-post="/api/refresh-session"
+                hx-target="#session-status"
+                hx-indicator="#refresh-loading"
+                class="btn btn-secondary"
+            >
+                Renovar Sesión
+                <span id="refresh-loading" class="htmx-indicator">⏳</span>
+            </button>
+
+            <button
+                hx-post="/logout"
+                hx-indicator="#logout-loading-dash"
+                class="btn"
+                style="background-color: var(--color-error);"
+                hx-confirm="¿Estás seguro de que quieres cerrar sesión?"
+            >
+                Cerrar Sesión
+                <span id="logout-loading-dash" class="htmx-indicator">⏳</span>
+            </button>
+        </div>
+
+        <div class="mt-md">
+            <div id="profile-data"></div>
+            <div id="session-status"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Mostrar hora de login
+document.addEventListener('DOMContentLoaded', function() {
+    const now = new Date();
+    document.getElementById('login-time').textContent = now.toLocaleString('es-ES');
+});
+</script>
+
+<style>
+.success {
+    color: var(--color-success);
+    background-color: rgba(16, 185, 129, 0.1);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--border-radius);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.info {
+    color: var(--color-primary);
+    background-color: rgba(37, 99, 235, 0.1);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--border-radius);
+    border: 1px solid rgba(37, 99, 235, 0.3);
+}
+
+.warning {
+    color: #f59e0b;
+    background-color: rgba(245, 158, 11, 0.1);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--border-radius);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+}
+</style>
+{/block}

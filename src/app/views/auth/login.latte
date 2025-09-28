@@ -1,0 +1,84 @@
+{extends '../layouts/Base.latte'}
+
+{block content}
+<div class="container" style="max-width: 400px; margin-top: 2rem;">
+    <div class="card">
+        <h2 class="text-center mb-lg">Iniciar Sesión</h2>
+
+        <form hx-post="/login" hx-target="#login-result" hx-indicator="#loading">
+            <div class="mb-md">
+                <label for="username" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">
+                    Usuario:
+                </label>
+                <input
+                    type="text"
+                    id="username"
+                    name="username"
+                    required
+                    placeholder="demo"
+                    value="demo"
+                >
+            </div>
+
+            <div class="mb-lg">
+                <label for="password" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">
+                    Contraseña:
+                </label>
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    required
+                    placeholder="demo"
+                    value="demo"
+                >
+            </div>
+
+            <button type="submit" class="btn" style="width: 100%;">
+                Iniciar Sesión
+                <span id="loading" class="htmx-indicator" style="margin-left: 0.5rem;">
+                    ⏳
+                </span>
+            </button>
+        </form>
+
+        <div id="login-result" class="mt-md"></div>
+
+        <div class="mt-lg text-center text-muted text-sm">
+            <p><strong>Credenciales de demo:</strong></p>
+            <p>Usuario: <code>demo</code></p>
+            <p>Contraseña: <code>demo</code></p>
+        </div>
+    </div>
+
+    <div class="text-center mt-lg">
+        <a href="/">← Volver al inicio</a>
+    </div>
+</div>
+
+<style>
+code {
+    background-color: var(--color-bg-light);
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-family: 'Courier New', monospace;
+    font-size: 0.875rem;
+}
+
+.success {
+    color: var(--color-success);
+    background-color: rgba(16, 185, 129, 0.1);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--border-radius);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.error {
+    color: var(--color-error);
+    background-color: rgba(239, 68, 68, 0.1);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--border-radius);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+}
+</style>
+{/block}
