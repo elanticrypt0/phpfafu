@@ -1,0 +1,28 @@
+# Logs de desarrollo
+logs/
+*.log
+
+# Archivos de entorno
+.env.local
+.env.*.local
+
+# Cache y archivos temporales
+src/storage/cache/
+src/vendor/
+src/composer.lock
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Docker volumes
+.docker/
+
+# Claude
+.claude
