@@ -1,0 +1,46 @@
+{
+    frankenphp
+    # Configuración de desarrollo con logs verbosos
+    log {
+        level DEBUG
+    }
+}
+
+:80 {
+    root * /var/www/html/public
+
+    # Configuración de desarrollo para hot reload
+    # Desactivar cache para desarrollo
+    header Cache-Control "no-store, no-cache, must-revalidate"
+    header Pragma "no-cache"
+    header Expires "0"
+
+    # Servir archivos estáticos directamente con revalidación
+    @static {
+        file
+        path *.js *.css *.png *.jpg *.jpeg *.gif *.ico *.svg *.woff *.woff2 *.ttf *.eot
+    }
+    handle @static {
+        # Sin cache para archivos estáticos en desarrollo
+        header Cache-Control "no-store, no-cache, must-revalidate"
+        file_server
+    }
+
+    # Manejar archivos PHP y rutas
+    try_files {path} /index.php
+
+    # Configuración PHP para desarrollo
+    php {
+        # Sin cache de opcodes en desarrollo
+        env OPCACHE_ENABLE=0
+    }
+
+    # Servir archivos
+    file_server
+
+    # Logs detallados para desarrollo
+    log {
+        output file /tmp/caddy-access.log
+        format json
+    }
+}

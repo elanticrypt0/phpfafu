@@ -1,0 +1,51 @@
+services:
+
+  db:
+    image: mysql:8.0
+    container_name: ${DB_NAME}
+    platform: linux/amd64
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - db_data:/var/lib/mysql
+    ports:
+      - "${DB_PORT}:3306"
+    networks:
+      - app-network
+
+  php:
+    container_name: ${APP_NAME}_dev
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile.dev
+    platform: linux/amd64
+    ports:
+      - "${APP_PORT}:80"
+    volumes:
+      # Montar código fuente para hot reload
+      - ./src:/var/www/html:rw
+      # Montar logs para debugging
+      - ./logs:/tmp:rw
+      # Excluir vendor para evitar conflictos
+      - /var/www/html/vendor
+    environment:
+      - PHP_IDE_CONFIG=serverName=Docker
+      - APP_ENV=development
+      - XDEBUG_MODE=develop,debug
+    networks:
+      - app-network
+    depends_on:
+      - db
+    # Reiniciar automáticamente en caso de errores
+    restart: unless-stopped
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  db_data:
+    driver: local
