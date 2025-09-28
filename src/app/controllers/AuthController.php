@@ -1,6 +1,8 @@
 <?php
 
 require_once __DIR__."/BaseController.php";
+require_once __DIR__."/../helpers/FlashMessages.php";
+require_once __DIR__."/../helpers/FormValidator.php";
 
 class AuthController extends BaseController
 {
@@ -14,6 +16,8 @@ class AuthController extends BaseController
             return;
         }
 
+        FlashMessages::addToViews();
+
         Flight::view()->render('auth/login.latte', [
             'title' => 'Iniciar Sesión',
             'currentUser' => Flight::get('currentUser'),
@@ -24,16 +28,28 @@ class AuthController extends BaseController
     public function login(): void
     {
         $request = Flight::request();
-        $username = $request->data['username'] ?? '';
-        $password = $request->data['password'] ?? '';
+        $data = [
+            'username' => $request->data['username'] ?? '',
+            'password' => $request->data['password'] ?? ''
+        ];
 
-        if ($this->validateCredentials($username, $password)) {
-            $this->startSession($username);
+        $validator = FormValidator::validateLogin($data);
+
+        if ($validator->fails()) {
+            FlashMessages::error($validator->getFirstError());
+            Flight::response()->header('HX-Redirect', '/login');
+            return;
+        }
+
+        if ($this->validateCredentials($data['username'], $data['password'])) {
+            $this->startSession($data['username']);
+            FlashMessages::success('¡Bienvenido! Has iniciado sesión correctamente.');
 
             // Respuesta HTMX para redirección
             Flight::response()->header('HX-Redirect', '/dashboard');
             echo '<div class="success">Login exitoso. Redirigiendo...</div>';
         } else {
+            FlashMessages::error('Credenciales incorrectas. Usa demo/demo');
             // Respuesta HTMX con error
             echo '<div class="card" style="border-color: var(--color-error);">
                     <p style="color: var(--color-error); margin: 0;">
@@ -75,6 +91,7 @@ class AuthController extends BaseController
         }
 
         $user = $_SESSION['user'] ?? 'Usuario';
+        FlashMessages::addToViews();
 
         Flight::view()->render('auth/dashboard.latte', [
             'title' => 'Dashboard',
