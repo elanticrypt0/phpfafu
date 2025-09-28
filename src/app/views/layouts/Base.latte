@@ -8,14 +8,54 @@
 </head>
 <body>
     <header>
-        <h1>{$title}</h1>
-        <nav>
-            <a href="/">Home</a>
-        </nav>
+        <div class="flex items-center" style="justify-content: space-between;">
+            <div>
+                <h1>{$title}</h1>
+            </div>
+            <nav class="flex gap-md items-center">
+                <a href="/">🏠 Inicio</a>
+
+                {if $isAuthenticated}
+                    <a href="/dashboard">📊 Dashboard</a>
+                    <span class="text-muted">👋 Hola, {$currentUser}</span>
+                    <button
+                        hx-post="/logout"
+                        hx-indicator="#logout-loading"
+                        class="btn btn-secondary"
+                        style="padding: 0.25rem 0.75rem; font-size: 0.875rem;"
+                        hx-confirm="¿Cerrar sesión?"
+                    >
+                        🚪 Salir
+                        <span id="logout-loading" class="htmx-indicator">⏳</span>
+                    </button>
+                {else}
+                    <a href="/login" class="btn" style="padding: 0.25rem 0.75rem; font-size: 0.875rem;">
+                        🔐 Ingresar
+                    </a>
+                {/if}
+            </nav>
+        </div>
     </header>
     <main>
         {block content}{/block}
     </main>
     <script src="/assets/js/htmx.min.js"></script>
+    <script>
+    // Manejar eventos HTMX
+    document.body.addEventListener('htmx:responseError', function(evt) {
+        console.error('Error HTMX:', evt.detail);
+    });
+
+    // Manejar redirecciones de logout como fallback
+    document.body.addEventListener('htmx:afterRequest', function(evt) {
+        const xhr = evt.detail.xhr;
+        if (xhr.getResponseHeader('HX-Redirect')) {
+            const redirectUrl = xhr.getResponseHeader('HX-Redirect');
+            setTimeout(() => {
+                window.location.href = redirectUrl;
+            }, 500); // Pequeño delay para mostrar el mensaje
+        }
+    });
+    </script>
 </body>
 </html>

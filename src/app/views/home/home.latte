@@ -1,10 +1,140 @@
 {extends '../layouts/Base.latte'}
 
 {block content}
-    <h2>Saludar</h2>
-    <form hx-post="/saludar" hx-target="#respuesta">
-        <input name="nombre" placeholder="Diga su nombre"/>
-        <button type="submit">Saludar</button>
-    </form>
-    <div id="respuesta"></div>
+<div class="container">
+    <!-- Banner de bienvenida -->
+    <div class="card text-center mb-xl">
+        <h2>¡Bienvenido a Docker PHP API! 🚀</h2>
+        <p class="text-muted">
+            Una aplicación moderna con Flight Framework, Latte y HTMX
+        </p>
+    </div>
+
+    <!-- Estado de autenticación -->
+    {if $isAuthenticated}
+        <div class="card mb-lg" style="border-color: var(--color-success);">
+            <h3>✅ Sesión Activa</h3>
+            <p>¡Hola <strong>{$currentUser}</strong>! Tienes acceso a todas las funcionalidades.</p>
+            <a href="/dashboard" class="btn">Ir al Dashboard 📊</a>
+        </div>
+    {else}
+        <div class="card mb-lg" style="border-color: var(--color-primary);">
+            <h3>🔐 Área de Autenticación</h3>
+            <p>Inicia sesión para acceder a funcionalidades protegidas.</p>
+            <div class="flex gap-md">
+                <a href="/login" class="btn">Iniciar Sesión</a>
+                <div class="text-muted text-sm" style="align-self: center;">
+                    Demo: <code>demo/demo</code>
+                </div>
+            </div>
+        </div>
+    {/if}
+
+    <!-- Funcionalidades disponibles -->
+    <div class="flex gap-lg" style="flex-wrap: wrap;">
+        <!-- Ejemplo HTMX público -->
+        <div class="card" style="flex: 1; min-width: 300px;">
+            <h3>💬 Saludar (Público)</h3>
+            <p class="text-muted mb-md">Ejemplo de HTMX sin autenticación requerida.</p>
+
+            <form hx-post="/saludar" hx-target="#respuesta" hx-indicator="#loading-saludo">
+                <div class="mb-md">
+                    <input
+                        name="nombre"
+                        placeholder="Ingresa tu nombre"
+                        style="margin-bottom: 0.5rem;"
+                        value="Visitante"
+                    />
+                </div>
+                <button type="submit" class="btn btn-secondary">
+                    Saludar
+                    <span id="loading-saludo" class="htmx-indicator">⏳</span>
+                </button>
+            </form>
+            <div id="respuesta" class="mt-md"></div>
+        </div>
+
+        <!-- Funciones protegidas -->
+        <div class="card" style="flex: 1; min-width: 300px;">
+            <h3>🔒 Área Protegida</h3>
+            <p class="text-muted mb-md">Funcionalidades que requieren autenticación.</p>
+
+            {if $isAuthenticated}
+                <div class="success mb-md">
+                    ✅ Tienes acceso a contenido protegido
+                </div>
+
+                <button
+                    hx-get="/api/protected-data"
+                    hx-target="#protected-preview"
+                    hx-indicator="#loading-protected"
+                    class="btn mb-sm"
+                    style="width: 100%;"
+                >
+                    Ver Datos Protegidos
+                    <span id="loading-protected" class="htmx-indicator">⏳</span>
+                </button>
+
+                <div id="protected-preview"></div>
+            {else}
+                <div class="text-center">
+                    <p class="text-muted">🔐 Requiere autenticación</p>
+                    <a href="/login" class="btn btn-secondary">Iniciar Sesión</a>
+                </div>
+            {/if}
+        </div>
+    </div>
+
+    <!-- Información técnica -->
+    <div class="card mt-xl">
+        <h3>🛠️ Stack Tecnológico</h3>
+        <div class="flex gap-lg" style="flex-wrap: wrap;">
+            <div style="flex: 1; min-width: 200px;">
+                <h4>Backend</h4>
+                <ul style="list-style: none; padding: 0;">
+                    <li>✅ PHP 8.2 + FrankenPHP</li>
+                    <li>✅ Flight Framework</li>
+                    <li>✅ Latte Templates</li>
+                    <li>✅ Sistema de Autenticación</li>
+                </ul>
+            </div>
+            <div style="flex: 1; min-width: 200px;">
+                <h4>Frontend</h4>
+                <ul style="list-style: none; padding: 0;">
+                    <li>✅ HTMX para interactividad</li>
+                    <li>✅ CSS Variables + Responsive</li>
+                    <li>✅ Componentes modulares</li>
+                    <li>✅ Estados de carga</li>
+                </ul>
+            </div>
+            <div style="flex: 1; min-width: 200px;">
+                <h4>DevOps</h4>
+                <ul style="list-style: none; padding: 0;">
+                    <li>✅ Docker + Docker Compose</li>
+                    <li>✅ MySQL 8.0</li>
+                    <li>✅ Xdebug habilitado</li>
+                    <li>✅ Hot reload</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+code {
+    background-color: var(--color-bg-light);
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-family: 'Courier New', monospace;
+    font-size: 0.875rem;
+}
+
+.success {
+    color: var(--color-success);
+    background-color: rgba(16, 185, 129, 0.1);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--border-radius);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
+</style>
 {/block}
