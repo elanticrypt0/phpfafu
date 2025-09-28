@@ -1,0 +1,254 @@
+{layout '../layout.latte'}
+
+{block content}
+<div class="container">
+    <h1>🚀 Ejemplos de Eloquent ORM & Laravel Validator</h1>
+
+    <p class="subtitle">
+        Ejemplos prácticos de las nuevas implementaciones con Eloquent ORM y Laravel Validator
+    </p>
+
+    {include '../shared/flash_messages.latte'}
+
+    <div class="grid">
+        <!-- Crear Usuario -->
+        <div class="card">
+            <h3>👤 Crear Usuario</h3>
+            <p>Ejemplo de creación de usuario con validación usando Laravel Validator y Eloquent ORM.</p>
+            <form method="POST" action="/examples/run">
+                <input type="hidden" name="example" value="create_user">
+                <button type="submit" class="btn btn-primary">Ejecutar Ejemplo</button>
+            </form>
+        </div>
+
+        <!-- Autenticación -->
+        <div class="card">
+            <h3>🔐 Autenticación</h3>
+            <p>Autenticar usuario usando el modelo Eloquent con credenciales demo/demo.</p>
+            <form method="POST" action="/examples/run">
+                <input type="hidden" name="example" value="authenticate">
+                <button type="submit" class="btn btn-primary">Ejecutar Ejemplo</button>
+            </form>
+        </div>
+
+        <!-- Búsqueda de Usuarios -->
+        <div class="card">
+            <h3>🔍 Buscar Usuarios</h3>
+            <p>Búsqueda de usuarios con filtros y paginación.</p>
+            <form method="POST" action="/examples/run">
+                <input type="hidden" name="example" value="search_users">
+                <div class="form-group">
+                    <label for="search_term">Término de búsqueda:</label>
+                    <input type="text" name="search_term" value="demo" placeholder="Buscar...">
+                </div>
+                <button type="submit" class="btn btn-primary">Ejecutar Ejemplo</button>
+            </form>
+        </div>
+
+        <!-- Múltiples Conexiones -->
+        <div class="card">
+            <h3>🔗 Múltiples Conexiones</h3>
+            <p>Demostración del uso de múltiples conexiones de base de datos.</p>
+            <form method="POST" action="/examples/run">
+                <input type="hidden" name="example" value="multiple_connections">
+                <button type="submit" class="btn btn-primary">Ejecutar Ejemplo</button>
+            </form>
+        </div>
+
+        <!-- Transacciones -->
+        <div class="card">
+            <h3>💾 Transacciones</h3>
+            <p>Ejemplo de transacciones con Eloquent para operaciones atómicas.</p>
+            <form method="POST" action="/examples/run">
+                <input type="hidden" name="example" value="transaction">
+                <button type="submit" class="btn btn-primary">Ejecutar Ejemplo</button>
+            </form>
+        </div>
+
+        <!-- Validaciones Avanzadas -->
+        <div class="card">
+            <h3>✅ Validaciones Avanzadas</h3>
+            <p>Validaciones complejas con Laravel Validator y mensajes personalizados.</p>
+            <form method="POST" action="/examples/run">
+                <input type="hidden" name="example" value="advanced_validation">
+                <button type="submit" class="btn btn-primary">Ejecutar Ejemplo</button>
+            </form>
+        </div>
+
+        <!-- Estadísticas del Sistema -->
+        <div class="card">
+            <h3>📊 Estadísticas</h3>
+            <p>Estadísticas del sistema, conexiones y usuarios.</p>
+            <form method="POST" action="/examples/run">
+                <input type="hidden" name="example" value="system_stats">
+                <button type="submit" class="btn btn-primary">Ejecutar Ejemplo</button>
+            </form>
+        </div>
+
+        <!-- Todos los Ejemplos -->
+        <div class="card">
+            <h3>🎯 Todos los Ejemplos</h3>
+            <p>Ejecutar todos los ejemplos en secuencia.</p>
+            <form method="POST" action="/examples/run">
+                <input type="hidden" name="example" value="all">
+                <button type="submit" class="btn btn-warning">Ejecutar Todos</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Resultados -->
+    {if isset($_SESSION['example_result'])}
+    <div class="results-section">
+        <h2>📋 Resultado del Último Ejemplo</h2>
+        <div class="card">
+            <h4>Tipo: {$_SESSION['example_result']['type']|capitalize}</h4>
+            <p><strong>Ejecutado:</strong> {$_SESSION['example_result']['timestamp']}</p>
+
+            <div class="code-block">
+                <pre><code>{$_SESSION['example_result']['data']|json:4}</code></pre>
+            </div>
+        </div>
+    </div>
+    {php unset($_SESSION['example_result'])}
+    {/if}
+
+    <!-- API Endpoints -->
+    <div class="api-section">
+        <h2>🔌 API Endpoints</h2>
+        <div class="card">
+            <h4>Endpoints disponibles:</h4>
+            <ul>
+                <li><code>GET /api/examples/?example=create_user</code> - Crear usuario</li>
+                <li><code>GET /api/examples/?example=authenticate</code> - Autenticar</li>
+                <li><code>GET /api/examples/?example=search_users</code> - Buscar usuarios</li>
+                <li><code>GET /api/examples/?example=multiple_connections</code> - Múltiples conexiones</li>
+                <li><code>GET /api/examples/?example=transaction</code> - Transacciones</li>
+                <li><code>GET /api/examples/?example=advanced_validation</code> - Validaciones</li>
+                <li><code>GET /api/examples/?example=system_stats</code> - Estadísticas</li>
+                <li><code>GET /api/examples/all</code> - Todos los ejemplos</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Enlaces -->
+    <div class="links-section">
+        <a href="/examples/docs" class="btn btn-secondary">📚 Ver Documentación</a>
+        <a href="/database/connections" class="btn btn-secondary">🗄️ Gestión de BD</a>
+        <a href="/dashboard" class="btn btn-secondary">🏠 Dashboard</a>
+    </div>
+</div>
+
+<style>
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
+    margin: 2rem 0;
+}
+
+.card {
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.card h3 {
+    margin-top: 0;
+    color: var(--color-primary);
+}
+
+.form-group {
+    margin: 1rem 0;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+}
+
+.btn {
+    display: inline-block;
+    padding: 0.7rem 1.5rem;
+    margin: 0.5rem 0.5rem 0.5rem 0;
+    border: none;
+    border-radius: 4px;
+    text-decoration: none;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+
+.btn-primary {
+    background-color: var(--color-primary);
+    color: white;
+}
+
+.btn-warning {
+    background-color: #f39c12;
+    color: white;
+}
+
+.btn-secondary {
+    background-color: #95a5a6;
+    color: white;
+}
+
+.btn:hover {
+    opacity: 0.9;
+}
+
+.results-section, .api-section, .links-section {
+    margin: 3rem 0;
+}
+
+.code-block {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 4px;
+    padding: 1rem;
+    margin: 1rem 0;
+    overflow-x: auto;
+}
+
+.code-block pre {
+    margin: 0;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+}
+
+.subtitle {
+    color: #666;
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+}
+
+.api-section ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.api-section li {
+    margin: 0.5rem 0;
+    padding: 0.5rem;
+    background: #f8f9fa;
+    border-radius: 4px;
+}
+
+.api-section code {
+    background: #e9ecef;
+    padding: 0.2rem 0.4rem;
+    border-radius: 3px;
+    font-family: monospace;
+}
+</style>
+{/block}

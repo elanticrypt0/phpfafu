@@ -14,6 +14,9 @@ Flight::register('view', Engine::class, [], function ($latte) {
    $latte->setLoader(new \Latte\Loaders\FileLoader(__DIR__ . '/../app/views'));
 });
 
+// Inicializar Eloquent ORM
+require_once __DIR__."/../app/config/eloquent.php";
+
 require_once __DIR__."/../app/config/classes.php";
 require_once __DIR__."/../app/config/routes/routes.php";
 

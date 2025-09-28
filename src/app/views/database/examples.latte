@@ -1,0 +1,263 @@
+{extends '../layouts/Base.latte'}
+
+{block content}
+<div class="container">
+    <div class="card">
+        <h2>🧪 Ejemplos de Uso de Base de Datos</h2>
+        <p class="text-muted mb-lg">
+            Ejecuta ejemplos prácticos para aprender a usar el DatabaseManager con múltiples conexiones.
+        </p>
+
+        <!-- Ejemplos disponibles -->
+        <div class="grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: var(--spacing-lg);">
+
+            <!-- Ejemplo 1: Crear tabla -->
+            <div class="example-card">
+                <h4>🏗️ Crear Tabla de Usuarios</h4>
+                <p class="text-muted" style="font-size: 0.875rem; margin-bottom: var(--spacing-md);">
+                    Crea una tabla de usuarios con campos básicos para las pruebas.
+                </p>
+                <div class="code-preview mb-md">
+                    <code>CREATE TABLE users (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  username VARCHAR(50) UNIQUE,
+  email VARCHAR(100) UNIQUE,
+  ...
+)</code>
+                </div>
+                <form method="POST" action="/database/run-example">
+                    <input type="hidden" name="example" value="create_users_table">
+                    <button type="submit" class="btn btn-secondary" style="width: 100%;">
+                        Ejecutar Ejemplo
+                    </button>
+                </form>
+            </div>
+
+            <!-- Ejemplo 2: Insertar datos -->
+            <div class="example-card">
+                <h4>📝 Insertar Datos de Prueba</h4>
+                <p class="text-muted" style="font-size: 0.875rem; margin-bottom: var(--spacing-md);">
+                    Inserta usuarios de ejemplo usando el helper DatabaseManager::insert().
+                </p>
+                <div class="code-preview mb-md">
+                    <code>DatabaseManager::insert('users', [
+  'username' => 'admin',
+  'email' => 'admin@example.com',
+  'password_hash' => '...'
+]);</code>
+                </div>
+                <form method="POST" action="/database/run-example">
+                    <input type="hidden" name="example" value="insert_sample_data">
+                    <button type="submit" class="btn btn-secondary" style="width: 100%;">
+                        Ejecutar Ejemplo
+                    </button>
+                </form>
+            </div>
+
+            <!-- Ejemplo 3: Múltiples conexiones -->
+            <div class="example-card">
+                <h4>🔗 Demo Múltiples Conexiones</h4>
+                <p class="text-muted" style="font-size: 0.875rem; margin-bottom: var(--spacing-md);">
+                    Demuestra el uso de diferentes conexiones de base de datos.
+                </p>
+                <div class="code-preview mb-md">
+                    <code>// Conexión principal
+$users = DatabaseManager::select(
+  "SELECT COUNT(*) FROM users"
+);
+
+// Conexión de reportes
+$reports = DatabaseManager::select(
+  "SELECT * FROM reports",
+  [],
+  'reports'
+);</code>
+                </div>
+                <form method="POST" action="/database/run-example">
+                    <input type="hidden" name="example" value="multi_connection_demo">
+                    <button type="submit" class="btn btn-secondary" style="width: 100%;">
+                        Ejecutar Ejemplo
+                    </button>
+                </form>
+            </div>
+
+            <!-- Ejemplo 4: Transacciones -->
+            <div class="example-card">
+                <h4>⚡ Demo de Transacciones</h4>
+                <p class="text-muted" style="font-size: 0.875rem; margin-bottom: var(--spacing-md);">
+                    Ejecuta múltiples operaciones en una sola transacción.
+                </p>
+                <div class="code-preview mb-md">
+                    <code>DatabaseManager::transaction(function($pdo) {
+  // Insertar usuario
+  $userId = DatabaseManager::insert(...);
+
+  // Insertar log de actividad
+  DatabaseManager::insert(...);
+
+  return $userId;
+});</code>
+                </div>
+                <form method="POST" action="/database/run-example">
+                    <input type="hidden" name="example" value="transaction_demo">
+                    <button type="submit" class="btn btn-secondary" style="width: 100%;">
+                        Ejecutar Ejemplo
+                    </button>
+                </form>
+            </div>
+
+            <!-- Ejemplo 5: Test de rendimiento -->
+            <div class="example-card">
+                <h4>🚀 Test de Rendimiento</h4>
+                <p class="text-muted" style="font-size: 0.875rem; margin-bottom: var(--spacing-md);">
+                    Ejecuta múltiples consultas para medir el rendimiento del sistema.
+                </p>
+                <div class="code-preview mb-md">
+                    <code>// Ejecutar 10 consultas
+for ($i = 0; $i < 10; $i++) {
+  DatabaseManager::select(
+    "SELECT COUNT(*) FROM users"
+  );
+}
+
+// Mostrar estadísticas</code>
+                </div>
+                <form method="POST" action="/database/run-example">
+                    <input type="hidden" name="example" value="performance_test">
+                    <button type="submit" class="btn btn-secondary" style="width: 100%;">
+                        Ejecutar Ejemplo
+                    </button>
+                </form>
+            </div>
+
+            <!-- Ejemplo 6: Información del sistema -->
+            <div class="example-card">
+                <h4>📊 Información del Sistema</h4>
+                <p class="text-muted" style="font-size: 0.875rem; margin-bottom: var(--spacing-md);">
+                    Ver estadísticas y estado de las conexiones configuradas.
+                </p>
+                <div class="code-preview mb-md">
+                    <code>// Información de conexiones
+$info = DatabaseManager::getConnectionsInfo();
+
+// Estadísticas de uso
+$stats = DatabaseManager::getStats();</code>
+                </div>
+                <a href="/database/connections" class="btn btn-secondary" style="width: 100%;">
+                    Ver Información
+                </a>
+            </div>
+        </div>
+
+        <!-- Documentación de métodos -->
+        <div class="mt-xl" style="padding-top: var(--spacing-xl); border-top: 1px solid var(--color-border);">
+            <h3>📚 Métodos Disponibles en DatabaseManager</h3>
+
+            <div class="methods-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: var(--spacing-md); margin-top: var(--spacing-lg);">
+                <div class="method-card">
+                    <h5>🔌 Conexiones</h5>
+                    <ul style="font-size: 0.875rem; margin: 0; padding-left: var(--spacing-md);">
+                        <li><code>connection($name)</code></li>
+                        <li><code>testConnection($name)</code></li>
+                        <li><code>disconnect($name)</code></li>
+                        <li><code>getConnectionsInfo()</code></li>
+                    </ul>
+                </div>
+
+                <div class="method-card">
+                    <h5>📝 Consultas</h5>
+                    <ul style="font-size: 0.875rem; margin: 0; padding-left: var(--spacing-md);">
+                        <li><code>query($sql, $params)</code></li>
+                        <li><code>select($sql, $params)</code></li>
+                        <li><code>transaction($callback)</code></li>
+                    </ul>
+                </div>
+
+                <div class="method-card">
+                    <h5>💾 CRUD Operations</h5>
+                    <ul style="font-size: 0.875rem; margin: 0; padding-left: var(--spacing-md);">
+                        <li><code>insert($table, $data)</code></li>
+                        <li><code>update($table, $data, $where)</code></li>
+                        <li><code>delete($table, $where)</code></li>
+                    </ul>
+                </div>
+
+                <div class="method-card">
+                    <h5>📊 Estadísticas</h5>
+                    <ul style="font-size: 0.875rem; margin: 0; padding-left: var(--spacing-md);">
+                        <li><code>getStats()</code></li>
+                        <li><code>db()</code> - Conexión por defecto</li>
+                        <li><code>disconnectAll()</code></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navegación -->
+        <div class="mt-xl">
+            <div class="flex gap-md">
+                <a href="/database/connections" class="btn btn-secondary">
+                    🗄️ Ver Conexiones
+                </a>
+                <a href="/database/query-runner" class="btn btn-secondary">
+                    📝 Ejecutor de Consultas
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.example-card {
+    padding: var(--spacing-lg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    background-color: var(--color-bg);
+}
+
+.example-card h4 {
+    margin-bottom: var(--spacing-sm);
+    color: var(--color-primary);
+}
+
+.code-preview {
+    background-color: var(--color-bg-light);
+    padding: var(--spacing-sm);
+    border-radius: var(--border-radius);
+    border-left: 3px solid var(--color-primary);
+}
+
+.code-preview code {
+    font-family: 'Courier New', monospace;
+    font-size: 0.75rem;
+    line-height: 1.4;
+    white-space: pre-line;
+    background: none;
+    padding: 0;
+}
+
+.method-card {
+    padding: var(--spacing-md);
+    background-color: var(--color-bg-light);
+    border-radius: var(--border-radius);
+}
+
+.method-card h5 {
+    margin-bottom: var(--spacing-sm);
+    color: var(--color-text);
+}
+
+.method-card code {
+    background-color: white;
+    padding: 0.125rem 0.25rem;
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+}
+
+.example-card:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+    transition: all 0.2s ease;
+}
+</style>
+{/block}

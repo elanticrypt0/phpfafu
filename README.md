@@ -1,6 +1,6 @@
 # Docker PHP API
 
-Una aplicación web PHP moderna construida con Flight Framework, Latte y HTMX. Incluye sistema de autenticación completo, validación de formularios avanzada y mensajes flash interactivos.
+Una aplicación web PHP moderna construida con Flight Framework, Eloquent ORM, Laravel Validator y Latte. Incluye sistema de autenticación completo, gestión de múltiples bases de datos y ejemplos prácticos de uso.
 
 ## Instalación Rápida
 
@@ -20,22 +20,25 @@ docker compose up -d
 
 - **PHP 8.2** con FrankenPHP
 - **Flight Framework** - Micro framework para APIs y routing
+- **Eloquent ORM** - ORM de Laravel para bases de datos
+- **Laravel Validator** - Sistema de validación robusto con localización
 - **Latte** - Motor de plantillas de Nette
 - **HTMX** - Interactividad HTML moderna sin JavaScript
-- **Respect\Validation** - Validación de formularios robusta
-- **MySQL 8.0** - Base de datos
+- **MySQL 8.0** - Base de datos con soporte para múltiples conexiones
 - **Docker** - Containerización completa
 
 ## Características Implementadas
 
 ### ✅ Backend
 - **Estructura MVC** con controladores y middleware
-- **Sistema de rutas** avanzado con Flight
-- **Autenticación de usuarios** con sesiones PHP
+- **Eloquent ORM** integrado con múltiples conexiones de BD
+- **Laravel Validator** con mensajes en español y validaciones avanzadas
+- **Sistema RBAC** completo con roles y permisos granulares
+- **Autenticación de usuarios** con sesiones PHP y tokens API
 - **Middleware de autenticación** reutilizable
-- **APIs protegidas** con ejemplos funcionales
-- **Validación de formularios** con Respect\Validation
-- **Sistema de mensajes flash** con múltiples tipos
+- **APIs protegidas** con documentación y ejemplos
+- **Sistema de logging** y auditoría de actividades
+- **Transacciones de base de datos** y operaciones atómicas
 - **Hot reload** para desarrollo
 
 ### ✅ Frontend
@@ -55,16 +58,43 @@ docker compose up -d
 ## Sistema de Autenticación
 
 ### Credenciales Demo
-- **Usuario:** `demo`
-- **Contraseña:** `demo`
+Después de ejecutar el setup de base de datos, usa estos usuarios para testing:
+
+- **superadmin** / password (Super Administrador - acceso completo)
+- **admin** / password (Administrador - gestión general)
+- **moderator** / password (Moderador - gestión de contenido)
+- **demo** / demo (Usuario Demo - acceso básico)
+- **testuser** / test123 (Usuario de Prueba)
 
 ### Funcionalidades
-- ✅ Login/Logout con HTMX
+- ✅ Sistema RBAC con roles y permisos granulares
+- ✅ Login/Logout con validación Laravel Validator
 - ✅ Rutas protegidas con middleware
 - ✅ Dashboard con datos protegidos
-- ✅ APIs autenticadas de ejemplo
-- ✅ Redirecciones automáticas
-- ✅ Manejo de sesiones seguro
+- ✅ APIs autenticadas con tokens
+- ✅ Gestión de sesiones activas
+- ✅ Logs de actividad y auditoría
+- ✅ Soporte para 2FA (preparado)
+
+## Setup de Base de Datos
+
+### Configuración Rápida
+```bash
+# 1. Configurar variables de entorno
+cp src/.env.example src/.env
+
+# 2. Configurar la base de datos completa
+docker compose exec db mysql -u root -p docker_php_api < database/setup.sql
+```
+
+### Configuración Manual
+```bash
+# Crear solo las tablas
+docker compose exec db mysql -u root -p docker_php_api < database/migrations/001_initial_migration.sql
+
+# Agregar datos de ejemplo
+docker compose exec db mysql -u root -p docker_php_api < database/migrations/002_seed_initial_data.sql
+```
 
 ### Rutas Disponibles
 
@@ -74,16 +104,22 @@ docker compose up -d
 - `POST /login` - Procesar autenticación
 - `GET /dashboard` - Dashboard protegido
 - `GET /logout` - Cerrar sesión
-- `GET /api/protected-data` - API protegida
-- `GET /api/user-profile` - Perfil de usuario
 
-#### Ejemplos de Validación
-- `GET /examples/registration` - Formulario de registro con validación
-- `POST /examples/registration` - Procesar registro
-- `GET /examples/contact` - Formulario de contacto
-- `POST /examples/contact` - Procesar contacto
-- `GET /examples/validation-demo` - Demo de mensajes flash
-- `POST /examples/validation-demo` - Generar mensajes de prueba
+#### Gestión de Base de Datos
+- `GET /database/connections` - Ver conexiones de BD
+- `POST /database/test-connection` - Probar conexión específica
+- `GET /database/query-runner` - Ejecutor de queries
+- `POST /database/execute-query` - Ejecutar query SQL
+- `GET /database/examples` - Ejemplos de uso de BD
+
+#### Ejemplos de Eloquent & Laravel Validator
+- `GET /examples` - Índice de ejemplos
+- `POST /examples/run` - Ejecutar ejemplo específico
+- `GET /examples/docs` - Documentación de ejemplos
+
+#### API Endpoints
+- `GET /api/examples/?example=<tipo>` - Ejecutar ejemplo específico
+- `GET /api/examples/all` - Ejecutar todos los ejemplos
 
 ## Desarrollo
 
@@ -122,12 +158,22 @@ Ver [README_DEV.md](README_DEV.md) para documentación técnica detallada.
 │   │   ├── index.php        # Punto de entrada
 │   │   └── assets/          # CSS, JS, imágenes
 │   ├── app/
-│   │   ├── controllers/     # Auth, Home, Example Controllers
+│   │   ├── controllers/     # Auth, Database, Examples Controllers
+│   │   ├── models/          # Modelos Eloquent (User, etc.)
 │   │   ├── middleware/      # AuthMiddleware
-│   │   ├── helpers/         # FlashMessages, FormValidator
-│   │   ├── views/           # Plantillas Latte (auth, examples)
-│   │   └── config/          # Rutas y configuración
-│   └── storage/cache/       # Cache de plantillas
+│   │   ├── helpers/         # FlashMessages, FormValidator (Laravel)
+│   │   ├── examples/        # Ejemplos de uso de Eloquent y Laravel Validator
+│   │   ├── views/           # Plantillas Latte (auth, database, examples)
+│   │   └── config/          # Eloquent, database, rutas
+│   ├── storage/cache/       # Cache de plantillas
+│   ├── .env                 # Variables de entorno
+│   └── .env.example         # Template de variables
+├── database/                # Setup de base de datos
+│   ├── schema/              # Definiciones de tablas
+│   ├── seeds/               # Datos iniciales
+│   ├── migrations/          # Scripts de migración
+│   ├── setup.sql            # Setup completo
+│   └── README.md            # Documentación de BD
 ├── docker/                  # Configuración Docker
 ├── dev.sh                   # Script de desarrollo
 └── docker-compose.dev.yaml # Compose para desarrollo
@@ -135,20 +181,19 @@ Ver [README_DEV.md](README_DEV.md) para documentación técnica detallada.
 
 ## Ejemplos de Uso
 
-### 📝 Validación de Formularios
+### 📝 Validación con Laravel Validator
 
-#### Usar FormValidator Helper
+#### Validación Básica
 ```php
-// En tu controlador
-$validator = FormValidator::make($data)->validateMultiple([
-    'email' => [
-        'rules' => FormValidator::rules()->email(),
-        'message' => 'Email debe ser válido'
-    ],
-    'password' => [
-        'rules' => FormValidator::rules()->strongPassword(),
-        'message' => 'Contraseña debe ser segura'
-    ]
+// Usando el FormValidator actualizado con Laravel Validator
+$validator = FormValidator::make($data)->validate([
+    'email' => 'required|email',
+    'password' => 'required|min:8|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/',
+    'age' => 'required|integer|between:18,100'
+], [
+    'email.email' => 'El email debe ser válido',
+    'password.regex' => 'La contraseña debe contener mayúsculas, minúsculas y números',
+    'age.between' => 'La edad debe estar entre 18 y 100 años'
 ]);
 
 if ($validator->fails()) {
@@ -158,6 +203,18 @@ if ($validator->fails()) {
 }
 
 FlashMessages::success('¡Datos válidos!');
+```
+
+#### Validaciones Específicas Predefinidas
+```php
+// Validación de login
+$validator = FormValidator::validateLogin($data);
+
+// Validación de registro
+$validator = FormValidator::validateRegistration($data);
+
+// Validación de contraseña fuerte
+$validator = FormValidator::validateStrongPassword($data);
 ```
 
 #### Mensajes Flash
@@ -172,15 +229,76 @@ FlashMessages::info('Información adicional');
 // y se auto-ocultan después de 5 segundos
 ```
 
+### 🗄️ Usar Eloquent ORM
+
+#### Operaciones Básicas con el Modelo User
+```php
+// Crear usuario
+$user = User::create([
+    'username' => 'nuevo_usuario',
+    'email' => 'usuario@example.com',
+    'password' => 'password123', // Se hashea automáticamente
+    'first_name' => 'Nombre',
+    'last_name' => 'Apellido'
+]);
+
+// Buscar usuario
+$user = User::findByEmail('usuario@example.com');
+$user = User::findByUsername('nuevo_usuario');
+
+// Autenticar usuario
+$user = User::authenticate('usuario@example.com', 'password123');
+
+// Búsqueda con filtros
+$users = User::search('término')->get();
+$users = User::active()->get();
+```
+
+#### Múltiples Conexiones de Base de Datos
+```php
+// Usar conexión principal (por defecto)
+$users = User::all();
+
+// Usar conexión específica
+$users = User::on('secondary')->all();
+$users = User::on('analytics')->all();
+
+// Cambiar conexión dinámicamente
+$user = new User();
+$user->setConnection('analytics');
+$analyticsUsers = $user->all();
+```
+
+#### Transacciones
+```php
+// Transacción simple
+EloquentManager::transaction(function () {
+    $user = User::create($userData);
+    $profile = UserProfile::create(['user_id' => $user->id, ...]);
+    return $user;
+});
+
+// Transacción en conexión específica
+EloquentManager::transaction(function () {
+    // Operaciones en transacción
+}, 'secondary');
+```
+
 ### 🔐 Crear un Controlador
 ```php
 // src/app/controllers/MiController.php
+require_once __DIR__."/../models/User.php";
+
 class MiController extends BaseController {
     public function index(): void {
-        FlashMessages::addToViews(); // Para mensajes flash
+        FlashMessages::addToViews();
+
+        // Usar Eloquent
+        $users = User::active()->take(10)->get();
 
         Flight::view()->render('mi/vista.latte', [
             'title' => 'Mi Página',
+            'users' => $users,
             'currentUser' => Flight::get('currentUser'),
             'isAuthenticated' => Flight::get('isAuthenticated')
         ]);
@@ -222,29 +340,42 @@ Flight::route('GET /admin', function () {
 
 ## 🧪 Ejemplos Interactivos
 
-Visita la aplicación para ver ejemplos funcionales de validación y mensajes flash:
+Visita la aplicación para ver ejemplos funcionales de Eloquent ORM y Laravel Validator:
 
-### 📝 Formulario de Registro (`/examples/registration`)
-- **Validaciones complejas:** Usuario alfanumérico (3-20 chars), email válido, contraseñas seguras
-- **Confirmación de datos:** Verificación de contraseñas coincidentes
-- **Validaciones opcionales:** URL de sitio web, edad numérica
-- **Casos de prueba incluidos:** Ejemplos específicos para probar cada validación
+### 🚀 Ejemplos de Eloquent ORM (`/examples`)
+- **Crear Usuario:** Validación con Laravel Validator + creación con Eloquent
+- **Autenticación:** Sistema de login usando modelos Eloquent
+- **Búsqueda de Usuarios:** Filtros y paginación con Eloquent
+- **Múltiples Conexiones:** Demostración de conexiones múltiples de BD
+- **Transacciones:** Operaciones atómicas con rollback automático
+- **Validaciones Avanzadas:** Reglas complejas con mensajes personalizados
+- **Estadísticas del Sistema:** Información en tiempo real de conexiones y usuarios
 
-### 📧 Formulario de Contacto (`/examples/contact`)
-- **Validaciones básicas:** Nombre (solo letras), email requerido
-- **Longitudes controladas:** Asunto (5-100 chars), mensaje (10-1000 chars)
-- **Manejo de errores:** Mensajes específicos por campo
+### 🗄️ Gestión de Base de Datos (`/database/connections`)
+- **Conexiones Múltiples:** Visualización de todas las conexiones configuradas
+- **Prueba de Conexiones:** Test de conectividad en tiempo real
+- **Ejecutor de Queries:** Interface para ejecutar SQL directamente
+- **Información del Servidor:** Versiones, estadísticas y metadatos
 
-### 🎨 Demo de Mensajes Flash (`/examples/validation-demo`)
-- **4 tipos de mensajes:** Success, Error, Warning, Info
-- **Auto-ocultado:** Mensajes desaparecen automáticamente después de 5 segundos
-- **Múltiples mensajes:** Prueba de varios mensajes simultáneos
-- **Interactividad:** Botón de cerrar manual
+### 🔌 API Endpoints
+- **API de Ejemplos:** Endpoints RESTful para todos los ejemplos
+- **Respuestas JSON:** Datos estructurados para integración
+- **Documentación Automática:** Ejemplos de uso y parámetros
 
-### 🏠 Página Principal
-- **Links mejorados:** Tarjetas informativas con descripción de cada ejemplo
-- **Grid responsivo:** Layout que se adapta a móvil y desktop
-- **Acceso rápido:** Botones directos a todos los ejemplos
+#### Endpoints Disponibles:
+```bash
+# Ejecutar ejemplo específico
+GET /api/examples/?example=create_user
+GET /api/examples/?example=authenticate
+GET /api/examples/?example=search_users
+GET /api/examples/?example=multiple_connections
+GET /api/examples/?example=transaction
+GET /api/examples/?example=advanced_validation
+GET /api/examples/?example=system_stats
+
+# Ejecutar todos los ejemplos
+GET /api/examples/all
+```
 
 ## Licencia
 

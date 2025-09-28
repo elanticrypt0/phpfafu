@@ -1,0 +1,185 @@
+{extends '../layouts/Base.latte'}
+
+{block content}
+<div class="container">
+    <div class="card">
+        <h2>📝 Ejecutor de Consultas SQL</h2>
+        <p class="text-muted mb-lg">
+            Ejecuta consultas SQL en cualquiera de las conexiones configuradas.
+        </p>
+
+        <!-- Formulario de consulta -->
+        <form method="POST" action="/database/execute-query">
+            <div class="mb-md">
+                <label for="connection" style="display: block; margin-bottom: var(--spacing-xs); font-weight: 500;">
+                    Conexión:
+                </label>
+                <select id="connection" name="connection" style="width: 100%;">
+                    <option value="">Conexión por defecto</option>
+                    {foreach $connections as $name => $connection}
+                        <option value="{$name}">
+                            {$name} ({$connection['driver']} - {$connection['database']})
+                        </option>
+                    {/foreach}
+                </select>
+            </div>
+
+            <div class="mb-md">
+                <label for="sql" style="display: block; margin-bottom: var(--spacing-xs); font-weight: 500;">
+                    Consulta SQL:
+                </label>
+                <textarea
+                    id="sql"
+                    name="sql"
+                    rows="8"
+                    placeholder="Escribe tu consulta SQL aquí..."
+                    required
+                    style="width: 100%; font-family: 'Courier New', monospace; font-size: 0.875rem;"
+                ></textarea>
+            </div>
+
+            <div class="flex gap-md">
+                <button type="submit" class="btn">
+                    ▶️ Ejecutar Consulta
+                </button>
+                <button type="button" onclick="clearQuery()" class="btn btn-secondary">
+                    🗑️ Limpiar
+                </button>
+            </div>
+        </form>
+
+        <!-- Consultas de ejemplo -->
+        <div class="mt-lg" style="padding-top: var(--spacing-lg); border-top: 1px solid var(--color-border);">
+            <h3>💡 Consultas de Ejemplo</h3>
+            <div class="example-queries" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: var(--spacing-md);">
+                <button onclick="setQuery('SELECT 1 as test')" class="btn btn-secondary" style="text-align: left; padding: var(--spacing-sm);">
+                    <strong>Test básico:</strong><br>
+                    <code style="font-size: 0.75rem;">SELECT 1 as test</code>
+                </button>
+
+                <button onclick="setQuery('SHOW TABLES')" class="btn btn-secondary" style="text-align: left; padding: var(--spacing-sm);">
+                    <strong>Listar tablas:</strong><br>
+                    <code style="font-size: 0.75rem;">SHOW TABLES</code>
+                </button>
+
+                <button onclick="setQuery('SELECT COUNT(*) as total FROM users')" class="btn btn-secondary" style="text-align: left; padding: var(--spacing-sm);">
+                    <strong>Contar usuarios:</strong><br>
+                    <code style="font-size: 0.75rem;">SELECT COUNT(*) FROM users</code>
+                </button>
+
+                <button onclick="setQuery('SELECT * FROM users LIMIT 10')" class="btn btn-secondary" style="text-align: left; padding: var(--spacing-sm);">
+                    <strong>Ver usuarios:</strong><br>
+                    <code style="font-size: 0.75rem;">SELECT * FROM users LIMIT 10</code>
+                </button>
+            </div>
+        </div>
+
+        <!-- Resultados -->
+        {if isset($_SESSION['query_results'])}
+            {var $results = $_SESSION['query_results']}
+            <div class="mt-lg" style="padding-top: var(--spacing-lg); border-top: 1px solid var(--color-border);">
+                <h3>📊 Resultados</h3>
+
+                <div class="result-meta mb-md" style="background-color: var(--color-bg-light); padding: var(--spacing-md); border-radius: var(--border-radius);">
+                    <p style="margin: 0.25rem 0;"><strong>Consulta:</strong> <code>{$results['sql']|truncate:100}</code></p>
+                    <p style="margin: 0.25rem 0;"><strong>Conexión:</strong> {$results['connection']}</p>
+                    <p style="margin: 0.25rem 0;"><strong>Tiempo de ejecución:</strong> {$results['execution_time']}ms</p>
+                    <p style="margin: 0.25rem 0;"><strong>Filas:</strong> {count($results['data'])}</p>
+                </div>
+
+                {if count($results['data']) > 0}
+                    <div class="table-container" style="overflow-x: auto;">
+                        <table style="width: 100%; border-collapse: collapse; font-size: 0.875rem;">
+                            <thead>
+                                <tr style="background-color: var(--color-bg-light);">
+                                    {foreach array_keys($results['data'][0]) as $column}
+                                        <th style="padding: var(--spacing-sm); text-align: left; border: 1px solid var(--color-border);">
+                                            {$column}
+                                        </th>
+                                    {/foreach}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {foreach $results['data'] as $row}
+                                    <tr>
+                                        {foreach $row as $value}
+                                            <td style="padding: var(--spacing-sm); border: 1px solid var(--color-border);">
+                                                {if $value === null}
+                                                    <em style="color: var(--color-text-light);">NULL</em>
+                                                {else}
+                                                    {$value|truncate:50}
+                                                {/if}
+                                            </td>
+                                        {/foreach}
+                                    </tr>
+                                {/foreach}
+                            </tbody>
+                        </table>
+                    </div>
+                {else}
+                    <p class="text-muted">No se retornaron datos.</p>
+                {/if}
+            </div>
+        {/if}
+
+        <!-- Navegación -->
+        <div class="mt-xl">
+            <div class="flex gap-md">
+                <a href="/database/connections" class="btn btn-secondary">
+                    🗄️ Ver Conexiones
+                </a>
+                <a href="/database/examples" class="btn btn-secondary">
+                    🧪 Ejemplos de Uso
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function setQuery(sql) {
+    document.getElementById('sql').value = sql;
+}
+
+function clearQuery() {
+    document.getElementById('sql').value = '';
+    document.getElementById('connection').value = '';
+}
+</script>
+
+<style>
+code {
+    background-color: var(--color-bg-light);
+    padding: 0.125rem 0.25rem;
+    border-radius: 0.25rem;
+    font-family: 'Courier New', monospace;
+}
+
+.example-queries button {
+    justify-content: flex-start;
+    align-items: flex-start;
+    white-space: normal;
+    height: auto;
+}
+
+.table-container {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+table th {
+    position: sticky;
+    top: 0;
+    background-color: var(--color-bg-light);
+    z-index: 1;
+}
+
+table tr:nth-child(even) {
+    background-color: rgba(0, 0, 0, 0.02);
+}
+
+table tr:hover {
+    background-color: rgba(37, 99, 235, 0.1);
+}
+</style>
+{/block}
