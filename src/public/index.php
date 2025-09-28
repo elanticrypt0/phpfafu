@@ -15,7 +15,7 @@ Flight::register('view', Engine::class, [], function ($latte) {
 });
 
 require_once __DIR__."/../app/config/classes.php";
-require_once __DIR__."/../app/config/routes.php";
+require_once __DIR__."/../app/config/routes/routes.php";
 
 // Finally, start the framework.
 Flight::start();
