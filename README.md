@@ -83,8 +83,14 @@ Después de ejecutar el setup de base de datos, usa estos usuarios para testing:
 # 1. Configurar variables de entorno
 cp src/.env.example src/.env
 
-# 2. Configurar la base de datos completa
-docker compose exec db mysql -u root -p docker_php_api < database/setup.sql
+# 2. Iniciar servicios
+docker compose up -d
+
+# 3. Configurar base de datos (NUEVO SCRIPT)
+./setup-db.sh
+
+# O usando el script de desarrollo
+./dev.sh db-setup
 ```
 
 ### Configuración Manual
@@ -128,6 +134,9 @@ docker compose exec db mysql -u root -p docker_php_api < database/migrations/002
 # Iniciar desarrollo con hot reload
 ./dev.sh start
 
+# Configurar base de datos completa
+./dev.sh db-setup
+
 # Ver logs en tiempo real
 ./dev.sh logs
 
@@ -137,11 +146,35 @@ docker compose exec db mysql -u root -p docker_php_api < database/migrations/002
 # Instalar dependencias
 ./dev.sh composer install
 
+# Resetear base de datos (⚠️ elimina datos)
+./dev.sh db-reset
+
 # Detener servicios
 ./dev.sh stop
 
 # Ver ayuda completa
 ./dev.sh help
+```
+
+### Script de Base de Datos (setup-db.sh)
+```bash
+# Setup completo (recomendado)
+./setup-db.sh
+
+# Solo crear tablas
+./setup-db.sh --tables
+
+# Solo insertar datos
+./setup-db.sh --seeds
+
+# Resetear completamente (⚠️ elimina todo)
+./setup-db.sh --reset
+
+# Ver estadísticas de la BD
+./setup-db.sh --stats
+
+# Ver ayuda
+./setup-db.sh --help
 ```
 
 ### Modo Desarrollo vs Producción

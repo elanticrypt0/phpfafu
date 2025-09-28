@@ -23,12 +23,15 @@ show_help() {
     echo -e "  ${GREEN}logs${NC}      - Ver logs en tiempo real"
     echo -e "  ${GREEN}shell${NC}     - Acceder al contenedor PHP"
     echo -e "  ${GREEN}composer${NC}  - Ejecutar comandos de Composer"
+    echo -e "  ${GREEN}db-setup${NC}  - Configurar base de datos completa"
+    echo -e "  ${GREEN}db-reset${NC}  - Resetear base de datos (⚠️ elimina datos)"
     echo -e "  ${GREEN}clean${NC}     - Limpiar contenedores y volúmenes"
     echo -e "  ${GREEN}build${NC}     - Reconstruir contenedores"
     echo -e "  ${GREEN}status${NC}    - Ver estado de los servicios"
     echo ""
     echo "Ejemplos:"
     echo -e "  ${YELLOW}./dev.sh start${NC}                    # Iniciar desarrollo"
+    echo -e "  ${YELLOW}./dev.sh db-setup${NC}               # Configurar BD"
     echo -e "  ${YELLOW}./dev.sh composer install${NC}        # Instalar dependencias"
     echo -e "  ${YELLOW}./dev.sh composer require vendor/pkg${NC} # Agregar paquete"
 }
@@ -94,6 +97,24 @@ case "${1:-help}" in
     status)
         echo -e "${BLUE}📊 Estado de los servicios:${NC}"
         docker compose -f docker-compose.dev.yaml ps
+        ;;
+
+    db-setup)
+        echo -e "${BLUE}🗄️ Configurando base de datos...${NC}"
+        if [ ! -f "./setup-db.sh" ]; then
+            echo -e "${RED}❌ Archivo setup-db.sh no encontrado${NC}"
+            exit 1
+        fi
+        ./setup-db.sh --full
+        ;;
+
+    db-reset)
+        echo -e "${YELLOW}⚠️ Reseteando base de datos...${NC}"
+        if [ ! -f "./setup-db.sh" ]; then
+            echo -e "${RED}❌ Archivo setup-db.sh no encontrado${NC}"
+            exit 1
+        fi
+        ./setup-db.sh --reset
         ;;
 
     help|--help|-h)
