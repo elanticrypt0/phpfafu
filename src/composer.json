@@ -1,6 +1,7 @@
 {
     "require": {
         "flightphp/core": "^3.17",
-        "latte/latte": "^3.0"
+        "latte/latte": "^3.0",
+        "respect/validation": "^2.4"
     }
 }

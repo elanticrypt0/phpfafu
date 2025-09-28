@@ -1,0 +1,91 @@
+{extends '../layouts/Base.latte'}
+
+{block content}
+<div class="container">
+    <div class="flex justify-center">
+        <div class="card" style="max-width: 500px; width: 100%;">
+            <h2>📧 Formulario de Contacto</h2>
+            <p class="text-muted mb-lg">
+                Ejemplo de validación con múltiples reglas y mensajes personalizados.
+            </p>
+
+            <form method="POST" action="/examples/contact">
+                <div class="mb-md">
+                    <label for="name" style="display: block; margin-bottom: var(--spacing-xs); font-weight: 500;">
+                        Nombre completo *
+                    </label>
+                    <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        placeholder="Juan Pérez"
+                        required
+                    >
+                </div>
+
+                <div class="mb-md">
+                    <label for="email" style="display: block; margin-bottom: var(--spacing-xs); font-weight: 500;">
+                        Email *
+                    </label>
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder="juan@ejemplo.com"
+                        required
+                    >
+                </div>
+
+                <div class="mb-md">
+                    <label for="subject" style="display: block; margin-bottom: var(--spacing-xs); font-weight: 500;">
+                        Asunto *
+                    </label>
+                    <input
+                        type="text"
+                        id="subject"
+                        name="subject"
+                        placeholder="¿En qué podemos ayudarte?"
+                        required
+                    >
+                </div>
+
+                <div class="mb-lg">
+                    <label for="message" style="display: block; margin-bottom: var(--spacing-xs); font-weight: 500;">
+                        Mensaje *
+                    </label>
+                    <textarea
+                        id="message"
+                        name="message"
+                        rows="4"
+                        placeholder="Describe tu consulta..."
+                        required
+                        style="resize: vertical; min-height: 100px;"
+                    ></textarea>
+                    <small class="text-muted" style="display: block; margin-top: var(--spacing-xs);">
+                        Entre 10 y 1000 caracteres
+                    </small>
+                </div>
+
+                <div class="flex gap-md">
+                    <button type="submit" class="btn" style="flex: 1;">
+                        📤 Enviar Mensaje
+                    </button>
+                    <a href="/examples/registration" class="btn btn-secondary">
+                        📝 Ver Registro
+                    </a>
+                </div>
+            </form>
+
+            <div class="mt-lg" style="padding-top: var(--spacing-lg); border-top: 1px solid var(--color-border);">
+                <h4>🧪 Prueba estos casos:</h4>
+                <ul style="margin-left: var(--spacing-lg); margin-top: var(--spacing-sm);">
+                    <li>Nombre con números: "Juan123"</li>
+                    <li>Asunto muy corto: "Hi"</li>
+                    <li>Mensaje muy corto: "Hola"</li>
+                    <li>Email inválido</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{/block}

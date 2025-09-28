@@ -1,0 +1,84 @@
+{extends '../layouts/Base.latte'}
+
+{block content}
+<div class="container">
+    <div class="flex justify-center">
+        <div class="card" style="max-width: 600px; width: 100%;">
+            <h2>🎨 Demo de Mensajes Flash</h2>
+            <p class="text-muted mb-lg">
+                Prueba los diferentes tipos de mensajes flash disponibles.
+            </p>
+
+            <div class="grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--spacing-md);">
+                <form method="POST" action="/examples/validation-demo">
+                    <input type="hidden" name="action" value="success">
+                    <button type="submit" class="btn" style="width: 100%; background-color: var(--color-success);">
+                        ✅ Mensaje de Éxito
+                    </button>
+                </form>
+
+                <form method="POST" action="/examples/validation-demo">
+                    <input type="hidden" name="action" value="error">
+                    <button type="submit" class="btn" style="width: 100%; background-color: var(--color-error);">
+                        ❌ Mensaje de Error
+                    </button>
+                </form>
+
+                <form method="POST" action="/examples/validation-demo">
+                    <input type="hidden" name="action" value="warning">
+                    <button type="submit" class="btn" style="width: 100%; background-color: #f59e0b;">
+                        ⚠️ Mensaje de Advertencia
+                    </button>
+                </form>
+
+                <form method="POST" action="/examples/validation-demo">
+                    <input type="hidden" name="action" value="info">
+                    <button type="submit" class="btn" style="width: 100%; background-color: var(--color-primary);">
+                        ℹ️ Mensaje Informativo
+                    </button>
+                </form>
+
+                <form method="POST" action="/examples/validation-demo">
+                    <input type="hidden" name="action" value="multiple">
+                    <button type="submit" class="btn btn-secondary" style="width: 100%;">
+                        📝 Múltiples Mensajes
+                    </button>
+                </form>
+
+                <form method="POST" action="/examples/validation-demo">
+                    <input type="hidden" name="action" value="invalid">
+                    <button type="submit" class="btn btn-secondary" style="width: 100%;">
+                        🔧 Acción Inválida
+                    </button>
+                </form>
+            </div>
+
+            <div class="mt-xl" style="padding-top: var(--spacing-xl); border-top: 1px solid var(--color-border);">
+                <h3>📋 Navegación de Ejemplos</h3>
+                <div class="flex gap-md mt-md" style="flex-wrap: wrap;">
+                    <a href="/examples/registration" class="btn btn-secondary">
+                        📝 Formulario de Registro
+                    </a>
+                    <a href="/examples/contact" class="btn btn-secondary">
+                        📧 Formulario de Contacto
+                    </a>
+                    <a href="/dashboard" class="btn btn-secondary">
+                        📊 Dashboard (requiere login)
+                    </a>
+                </div>
+            </div>
+
+            <div class="mt-lg">
+                <h4>💡 Características de los mensajes:</h4>
+                <ul style="margin-left: var(--spacing-lg); margin-top: var(--spacing-sm);">
+                    <li><strong>Auto-ocultado:</strong> Los mensajes se ocultan automáticamente después de 5 segundos (excepto errores)</li>
+                    <li><strong>Cerrar manual:</strong> Click en la "×" para cerrar cualquier mensaje</li>
+                    <li><strong>Múltiples tipos:</strong> Success, Error, Warning, Info</li>
+                    <li><strong>Persistencia:</strong> Los mensajes persisten entre redirecciones</li>
+                    <li><strong>Responsivo:</strong> Se adaptan a pantallas móviles</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{/block}

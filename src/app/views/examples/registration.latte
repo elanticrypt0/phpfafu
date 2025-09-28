@@ -1,0 +1,127 @@
+{extends '../layouts/Base.latte'}
+
+{block content}
+<div class="container">
+    <div class="flex justify-center">
+        <div class="card" style="max-width: 600px; width: 100%;">
+            <h2>📝 Ejemplo de Registro con Validación</h2>
+            <p class="text-muted mb-lg">
+                Este formulario demuestra la validación de campos sin HTMX,
+                usando redirecciones tradicionales y mensajes flash.
+            </p>
+
+            <form method="POST" action="/examples/registration">
+                <div class="mb-md">
+                    <label for="username" style="display: block; margin-bottom: var(--spacing-xs); font-weight: 500;">
+                        Usuario *
+                    </label>
+                    <input
+                        type="text"
+                        id="username"
+                        name="username"
+                        placeholder="Entre 3 y 20 caracteres alfanuméricos"
+                        required
+                    >
+                    <small class="text-muted" style="display: block; margin-top: var(--spacing-xs);">
+                        Solo letras y números, sin espacios
+                    </small>
+                </div>
+
+                <div class="mb-md">
+                    <label for="email" style="display: block; margin-bottom: var(--spacing-xs); font-weight: 500;">
+                        Email *
+                    </label>
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder="usuario@ejemplo.com"
+                        required
+                    >
+                </div>
+
+                <div class="mb-md">
+                    <label for="password" style="display: block; margin-bottom: var(--spacing-xs); font-weight: 500;">
+                        Contraseña *
+                    </label>
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Mínimo 8 caracteres"
+                        required
+                    >
+                    <small class="text-muted" style="display: block; margin-top: var(--spacing-xs);">
+                        Debe contener: mayúscula, minúscula y número
+                    </small>
+                </div>
+
+                <div class="mb-md">
+                    <label for="confirm_password" style="display: block; margin-bottom: var(--spacing-xs); font-weight: 500;">
+                        Confirmar Contraseña *
+                    </label>
+                    <input
+                        type="password"
+                        id="confirm_password"
+                        name="confirm_password"
+                        placeholder="Repite la contraseña"
+                        required
+                    >
+                </div>
+
+                <div class="mb-md">
+                    <label for="age" style="display: block; margin-bottom: var(--spacing-xs); font-weight: 500;">
+                        Edad *
+                    </label>
+                    <input
+                        type="number"
+                        id="age"
+                        name="age"
+                        placeholder="18"
+                        min="1"
+                        max="120"
+                        required
+                    >
+                </div>
+
+                <div class="mb-lg">
+                    <label for="website" style="display: block; margin-bottom: var(--spacing-xs); font-weight: 500;">
+                        Sitio Web (opcional)
+                    </label>
+                    <input
+                        type="url"
+                        id="website"
+                        name="website"
+                        placeholder="https://misitio.com"
+                    >
+                    <small class="text-muted" style="display: block; margin-top: var(--spacing-xs);">
+                        URL completa con http:// o https://
+                    </small>
+                </div>
+
+                <div class="flex gap-md">
+                    <button type="submit" class="btn" style="flex: 1;">
+                        ✅ Registrar
+                    </button>
+                    <a href="/examples/contact" class="btn btn-secondary">
+                        📧 Ver Contacto
+                    </a>
+                </div>
+            </form>
+
+            <div class="mt-lg" style="padding-top: var(--spacing-lg); border-top: 1px solid var(--color-border);">
+                <h4>💡 Casos de prueba:</h4>
+                <ul style="margin-left: var(--spacing-lg); margin-top: var(--spacing-sm);">
+                    <li>Deja campos vacíos para ver validación requerida</li>
+                    <li>Usa usuario "ab" (muy corto) o "usuario con espacios"</li>
+                    <li>Email inválido: "no-es-email"</li>
+                    <li>Contraseña débil: "123" o "password"</li>
+                    <li>Contraseñas que no coinciden</li>
+                    <li>Edad no numérica: "abc"</li>
+                    <li>URL inválida: "no-es-url"</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{/block}
