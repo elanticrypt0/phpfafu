@@ -31,6 +31,11 @@
         </div>
     </header>
     <main>
+        <!-- Mensajes Flash -->
+        {if isset($flashMessages) && $flashMessages !== ''}
+            {$flashMessages|noescape}
+        {/if}
+
         {block content}{/block}
     </main>
     <script src="/assets/js/htmx.min.js"></script>

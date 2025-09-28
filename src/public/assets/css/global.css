@@ -1,4 +1,4 @@
-/* Reset básico */
+/* Reset bï¿½sico */
 * {
     margin: 0;
     padding: 0;
@@ -33,7 +33,7 @@
     --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
-/* Tipografía base */
+/* Tipografï¿½a base */
 html {
     font-size: 16px;
     line-height: 1.5;
@@ -221,6 +221,75 @@ button:active,
     cursor: wait;
 }
 
+/* Mensajes Flash */
+.flash-messages-container {
+    margin-bottom: var(--spacing-lg);
+}
+
+.flash-message {
+    display: flex;
+    align-items: center;
+    padding: var(--spacing-md);
+    margin-bottom: var(--spacing-sm);
+    border-radius: var(--border-radius);
+    border: 1px solid;
+    position: relative;
+    transition: opacity 0.3s ease;
+}
+
+.flash-message:last-child {
+    margin-bottom: 0;
+}
+
+.flash-icon {
+    margin-right: var(--spacing-sm);
+    font-size: var(--font-size-lg);
+}
+
+.flash-text {
+    flex: 1;
+    margin-right: var(--spacing-md);
+}
+
+.flash-close {
+    background: none;
+    border: none;
+    font-size: var(--font-size-lg);
+    cursor: pointer;
+    padding: 0;
+    color: inherit;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+}
+
+.flash-close:hover {
+    opacity: 1;
+}
+
+.flash-success {
+    background-color: rgba(16, 185, 129, 0.1);
+    border-color: rgba(16, 185, 129, 0.3);
+    color: #065f46;
+}
+
+.flash-error {
+    background-color: rgba(239, 68, 68, 0.1);
+    border-color: rgba(239, 68, 68, 0.3);
+    color: #991b1b;
+}
+
+.flash-warning {
+    background-color: rgba(245, 158, 11, 0.1);
+    border-color: rgba(245, 158, 11, 0.3);
+    color: #92400e;
+}
+
+.flash-info {
+    background-color: rgba(37, 99, 235, 0.1);
+    border-color: rgba(37, 99, 235, 0.3);
+    color: #1e40af;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     :root {
@@ -239,5 +308,21 @@ button:active,
 
     main {
         padding: 0 var(--spacing-lg);
+    }
+
+    .flash-message {
+        padding: var(--spacing-sm);
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .flash-icon {
+        margin-right: 0;
+        margin-bottom: var(--spacing-xs);
+    }
+
+    .flash-text {
+        margin-right: 0;
+        margin-bottom: var(--spacing-sm);
     }
 }
