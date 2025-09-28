@@ -1,0 +1,10 @@
+{extends '../layouts/Base.latte'}
+
+{block content}
+    <h2>Saludar</h2>
+    <form hx-post="/saludar" hx-target="#respuesta">
+        <input name="nombre" placeholder="Diga su nombre"/>
+        <button type="submit">Saludar</button>
+    </form>
+    <div id="respuesta"></div>
+{/block}

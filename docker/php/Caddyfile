@@ -1,0 +1,21 @@
+{
+    frankenphp
+}
+
+:80 {
+    root * /var/www/html/public
+
+    # Serve static files directly
+    @static {
+        file
+        path *.js *.css *.png *.jpg *.jpeg *.gif *.ico *.svg *.woff *.woff2 *.ttf *.eot
+    }
+    handle @static {
+        file_server
+    }
+
+    # Handle PHP files and routes
+    try_files {path} /index.php
+    php
+    file_server
+}

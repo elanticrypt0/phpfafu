@@ -1,0 +1,9 @@
+APP_PORT=8081
+APP_NAME="app_php"
+
+DB_NAME="php_db"
+DB_PORT=3036
+MYSQL_ROOT_PASSWORD="root"
+MYSQL_DATABASE="mylocaldb"
+MYSQL_USER="homestead"
+MYSQL_PASSWORD="secret"
